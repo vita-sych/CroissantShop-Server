@@ -7,9 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class Drink {
-    private Long id;
-    private String name;
-    private String description;
-    private String image;
+public class OrderDrink {
+    private Drink drink;
+    private Integer quantity;
 }
