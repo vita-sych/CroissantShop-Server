@@ -17,24 +17,28 @@ public class DrinkInMemoryRepository implements DrinkRepository {
                     .name("Kombucha 77")
                     .description("Kombucha description")
                     .image("kombucha.jpeg")
+                    .price(2.0)
                     .build(),
             Drink.builder()
                     .id(2L)
                     .name("Coca Cola")
                     .description("Coca cola description")
                     .image("cola.png")
+                    .price(1.0)
                     .build(),
             Drink.builder()
                     .id(3L)
                     .name("Fanta")
                     .description("Fanta description")
                     .image("fanta.jpg")
+                    .price(1.5)
                     .build(),
             Drink.builder()
                     .id(4L)
                     .name("Sprite")
                     .description("Sprite description")
                     .image("sprite.png")
+                    .price(3.0)
                     .build()
     );
 

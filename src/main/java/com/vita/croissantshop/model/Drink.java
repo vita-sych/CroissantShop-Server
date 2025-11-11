@@ -7,9 +7,10 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class Drink {
+public class Drink implements PricedItem {
     private Long id;
     private String name;
     private String description;
     private String image;
+    private double price;
 }
