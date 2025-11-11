@@ -4,6 +4,7 @@ import com.vita.croissantshop.model.Item;
 import com.vita.croissantshop.model.Order;
 import com.vita.croissantshop.model.OrderDrink;
 import com.vita.croissantshop.repository.NewOrderRepository;
+import com.vita.croissantshop.service.ReceiptService;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Optional;
 public class NewOrderInMemoryRepository implements NewOrderRepository {
 
     private Order currentOrder = null;
+    private final ReceiptService receiptService = new ReceiptService();
 
     @Override
     public Optional<Order> getCurrentOrder() {
@@ -42,6 +44,11 @@ public class NewOrderInMemoryRepository implements NewOrderRepository {
     public Order addItem(Item item) {
         currentOrder.getItems().add(item);
         return currentOrder;
+    }
+
+    @Override
+    public void createReceipt() {
+        receiptService.addReceipt(currentOrder);
     }
 
     private void mergeToOrder(OrderDrink newDrink, Order currentOrder) {

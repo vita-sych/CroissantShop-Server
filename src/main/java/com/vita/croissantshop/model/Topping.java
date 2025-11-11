@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class Topping {
+public class Topping implements PricedItem {
     private Long id;
     private String name;
     private String image;

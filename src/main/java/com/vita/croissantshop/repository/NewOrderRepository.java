@@ -18,5 +18,7 @@ public interface NewOrderRepository {
     Order addDrinks(List<OrderDrink> drinks);
 
     Order addItem(Item item);
+
+    void createReceipt();
 }
 

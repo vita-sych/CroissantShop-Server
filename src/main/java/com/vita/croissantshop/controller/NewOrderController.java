@@ -56,5 +56,11 @@ public class NewOrderController {
     public Order addItem(@RequestBody Item item) {
         return newOrderRepository.addItem(item);
     }
+
+    @PostMapping("/new-order/receipt")
+    public void addItem() {
+        newOrderRepository.createReceipt();
+        newOrderRepository.deleteOrder();
+    }
 }
 
