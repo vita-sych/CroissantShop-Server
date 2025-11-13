@@ -3,9 +3,11 @@ package com.vita.croissantshop.controller;
 import com.vita.croissantshop.model.Item;
 import com.vita.croissantshop.model.Order;
 import com.vita.croissantshop.model.OrderDrink;
-import com.vita.croissantshop.model.request.AddDrinksRequest;
+import com.vita.croissantshop.model.OrderSide;
+import com.vita.croissantshop.model.request.AddAdditionRequest;
 import com.vita.croissantshop.repository.DrinkRepository;
 import com.vita.croissantshop.repository.NewOrderRepository;
+import com.vita.croissantshop.repository.SideRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,6 +27,7 @@ public class NewOrderController {
 
     private NewOrderRepository newOrderRepository;
     private DrinkRepository drinkRepository;
+    private SideRepository sideRepository;
 
     @GetMapping("/new-order")
     public Optional<Order> getCurrentOrder() {
@@ -42,14 +45,25 @@ public class NewOrderController {
     }
 
     @PostMapping("/new-order/drinks")
-    public Order addDrink(@RequestBody AddDrinksRequest addDrinksRequest) {
-        List<OrderDrink> orderDrinks = addDrinksRequest.getDrinksEntries().stream()
+    public Order addDrink(@RequestBody AddAdditionRequest addDrinksRequest) {
+        List<OrderDrink> orderDrinks = addDrinksRequest.getAdditionEntries().stream()
                 .map(requestEntry -> OrderDrink.builder()
-                        .drink(drinkRepository.findById(requestEntry.getDrinkId()).orElseThrow())
+                        .drink(drinkRepository.findById(requestEntry.getAdditionId()).orElseThrow())
                         .quantity(requestEntry.getQuantity())
                         .build()
                 ).toList();
         return newOrderRepository.addDrinks(orderDrinks);
+    }
+
+    @PostMapping("/new-order/sides")
+    public Order addSide(@RequestBody AddAdditionRequest addSidesRequest) {
+        List<OrderSide> orderSides = addSidesRequest.getAdditionEntries().stream()
+                .map(requestEntry -> OrderSide.builder()
+                        .side(sideRepository.findById(requestEntry.getAdditionId()).orElseThrow())
+                        .quantity(requestEntry.getQuantity())
+                        .build()
+                ).toList();
+        return newOrderRepository.addSides(orderSides);
     }
 
     @PostMapping("/new-order/item")
@@ -58,7 +72,7 @@ public class NewOrderController {
     }
 
     @PostMapping("/new-order/receipt")
-    public void addItem() {
+    public void confirmOrder() {
         newOrderRepository.createReceipt();
         newOrderRepository.deleteOrder();
     }

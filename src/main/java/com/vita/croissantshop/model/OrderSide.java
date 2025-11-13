@@ -7,12 +7,12 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class OrderDrink implements PricedItem {
-    private Drink drink;
+public class OrderSide implements PricedItem {
+    private Side side;
     private Integer quantity;
 
     @Override
     public double getPrice() {
-        return quantity * drink.getPrice();
+        return quantity * side.getPrice();
     }
 }

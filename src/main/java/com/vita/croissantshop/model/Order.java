@@ -15,4 +15,5 @@ import java.util.List;
 public class Order {
     private List<OrderDrink> drinks = new ArrayList<>();
     private List<Item> items = new ArrayList<>();
+    private List<OrderSide> sides = new ArrayList<>();
 }

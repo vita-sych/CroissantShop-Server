@@ -4,10 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
-public class AddDrinksRequestEntry {
-    private Long drinkId;
-    private Integer quantity;
+public class AddAdditionRequest {
+    private List<AddAdditionRequestEntry> additionEntries;
 }

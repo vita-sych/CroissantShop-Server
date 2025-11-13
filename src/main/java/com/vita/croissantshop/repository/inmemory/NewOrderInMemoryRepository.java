@@ -3,6 +3,7 @@ package com.vita.croissantshop.repository.inmemory;
 import com.vita.croissantshop.model.Item;
 import com.vita.croissantshop.model.Order;
 import com.vita.croissantshop.model.OrderDrink;
+import com.vita.croissantshop.model.OrderSide;
 import com.vita.croissantshop.repository.NewOrderRepository;
 import com.vita.croissantshop.service.ReceiptService;
 import org.springframework.stereotype.Repository;
@@ -35,7 +36,15 @@ public class NewOrderInMemoryRepository implements NewOrderRepository {
     @Override
     public Order addDrinks(List<OrderDrink> drinks) {
         for (OrderDrink drink : drinks) {
-            mergeToOrder(drink, currentOrder);
+            mergeDrinkToOrder(drink, currentOrder);
+        }
+        return currentOrder;
+    }
+
+    @Override
+    public Order addSides(List<OrderSide> sides) {
+        for (OrderSide side : sides) {
+            mergeSideToOrder(side, currentOrder);
         }
         return currentOrder;
     }
@@ -51,7 +60,7 @@ public class NewOrderInMemoryRepository implements NewOrderRepository {
         receiptService.addReceipt(currentOrder);
     }
 
-    private void mergeToOrder(OrderDrink newDrink, Order currentOrder) {
+    private void mergeDrinkToOrder(OrderDrink newDrink, Order currentOrder) {
         Optional<OrderDrink> existingDrink = currentOrder.getDrinks().stream()
                 .filter(orderDrink -> newDrink.getDrink().getId().equals(orderDrink.getDrink().getId()))
                 .findFirst();
@@ -59,6 +68,17 @@ public class NewOrderInMemoryRepository implements NewOrderRepository {
             existingDrink.get().setQuantity(existingDrink.get().getQuantity() + newDrink.getQuantity());
         } else {
             currentOrder.getDrinks().add(newDrink);
+        }
+    }
+
+    private void mergeSideToOrder(OrderSide newSide, Order currentOrder) {
+        Optional<OrderSide> existingSide = currentOrder.getSides().stream()
+                .filter(orderSide -> newSide.getSide().getId().equals(orderSide.getSide().getId()))
+                .findFirst();
+        if (existingSide.isPresent()) {
+            existingSide.get().setQuantity(existingSide.get().getQuantity() + newSide.getQuantity());
+        } else {
+            currentOrder.getSides().add(newSide);
         }
     }
 }
