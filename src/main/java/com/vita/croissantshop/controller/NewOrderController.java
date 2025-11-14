@@ -4,10 +4,12 @@ import com.vita.croissantshop.model.Item;
 import com.vita.croissantshop.model.Order;
 import com.vita.croissantshop.model.OrderDrink;
 import com.vita.croissantshop.model.OrderSide;
+import com.vita.croissantshop.model.Receipt;
 import com.vita.croissantshop.model.request.AddAdditionRequest;
 import com.vita.croissantshop.repository.DrinkRepository;
 import com.vita.croissantshop.repository.NewOrderRepository;
 import com.vita.croissantshop.repository.SideRepository;
+import com.vita.croissantshop.service.ReceiptService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,6 +30,7 @@ public class NewOrderController {
     private NewOrderRepository newOrderRepository;
     private DrinkRepository drinkRepository;
     private SideRepository sideRepository;
+    private ReceiptService receiptService;
 
     @GetMapping("/new-order")
     public Optional<Order> getCurrentOrder() {
@@ -45,7 +48,7 @@ public class NewOrderController {
     }
 
     @PostMapping("/new-order/drinks")
-    public Order addDrink(@RequestBody AddAdditionRequest addDrinksRequest) {
+    public Order addDrinks(@RequestBody AddAdditionRequest addDrinksRequest) {
         List<OrderDrink> orderDrinks = addDrinksRequest.getAdditionEntries().stream()
                 .map(requestEntry -> OrderDrink.builder()
                         .drink(drinkRepository.findById(requestEntry.getAdditionId()).orElseThrow())
@@ -56,7 +59,7 @@ public class NewOrderController {
     }
 
     @PostMapping("/new-order/sides")
-    public Order addSide(@RequestBody AddAdditionRequest addSidesRequest) {
+    public Order addSides(@RequestBody AddAdditionRequest addSidesRequest) {
         List<OrderSide> orderSides = addSidesRequest.getAdditionEntries().stream()
                 .map(requestEntry -> OrderSide.builder()
                         .side(sideRepository.findById(requestEntry.getAdditionId()).orElseThrow())
@@ -72,9 +75,11 @@ public class NewOrderController {
     }
 
     @PostMapping("/new-order/receipt")
-    public void confirmOrder() {
-        newOrderRepository.createReceipt();
+    public Receipt confirmOrder() {
+        Order order = newOrderRepository.getCurrentOrder().orElseThrow();
+        Receipt receipt = receiptService.addReceipt(order);
         newOrderRepository.deleteOrder();
+        return receipt;
     }
 }
 

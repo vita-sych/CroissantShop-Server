@@ -21,7 +21,5 @@ public interface NewOrderRepository {
     Order addSides(List<OrderSide> sides);
 
     Order addItem(Item item);
-
-    void createReceipt();
 }
 

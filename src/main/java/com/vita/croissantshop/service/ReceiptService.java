@@ -1,8 +1,18 @@
 package com.vita.croissantshop.service;
 
+import com.vita.croissantshop.model.Item;
 import com.vita.croissantshop.model.Order;
 import com.vita.croissantshop.model.PricedItem;
+import com.vita.croissantshop.model.Receipt;
+import com.vita.croissantshop.model.ReceiptItemEntry;
+import com.vita.croissantshop.model.ReceiptSideEntry;
+import com.vita.croissantshop.model.Size;
 import com.vita.croissantshop.model.Topping;
+import com.vita.croissantshop.model.Type;
+import com.vita.croissantshop.repository.ReceiptRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,60 +22,92 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+@Service
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class ReceiptService {
 
-    public void addReceipt(Order order) {
-        try {
-            Path path = Paths.get("src/main/resources/receipts/");
-            String fileName = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss").format(LocalDateTime.now()) + ".txt";
+    private static final Map<Type, Map<Size, Double>> ITEM_PRICE = Map.of(
+            Type.SWEET, Map.of(
+                    Size.SMALL, 2d,
+                    Size.MEDIUM, 3d,
+                    Size.LARGE, 5d
+            ),
+            Type.SAVORY, Map.of(
+                    Size.SMALL, 2.5d,
+                    Size.MEDIUM, 4.0d,
+                    Size.LARGE, 6.0d
+            )
+    );
 
-            String fullFilePath = path + File.separator +  fileName;
-            FileWriter fileWriter = new FileWriter(fullFilePath, true);
-            BufferedWriter bufWriter = new BufferedWriter(fileWriter);
+    private final ReceiptRepository receiptRepository;
 
-            String items = order.getItems().stream()
-                    .map(item -> {
-                        String toppings = item.getToppings().stream()
-                                .map(t -> String.format("   - %s | $%s", t.getName(), t.getPrice()))
-                                .collect(Collectors.joining("\n"));
-                        return String.format("Item: %s | %s\nToppings:\n%s\n", item.getSize(), item.getType(), toppings);
-                    })
-                    .collect(Collectors.joining("\n"));
+    public Receipt addReceipt(Order order) {
+        List<ReceiptItemEntry> receiptItemEntries = generateReceiptItems(order);
+        List<ReceiptSideEntry> receiptDrinkEntries = generateDrinksReceiptEntries(order);
+        List<ReceiptSideEntry> receiptSideEntries = generateSidesReceiptEntries(order);
+        double orderSubTotal = getSubTotal(order);
 
-            String drinks = order.getDrinks().stream()
-                    .map(d -> String.format("   - %s | $%s |Quantity: %d", d.getDrink().getName(), d.getPrice(), d.getQuantity()))
-                    .collect(Collectors.joining("\n"));
+        Receipt receipt = Receipt.builder()
+                .items(receiptItemEntries)
+                .drinks(receiptDrinkEntries)
+                .sides(receiptSideEntries)
+                .drinksTotalPrice(getSubTotalByItem(order.getDrinks()))
+                .sidesTotalPrice(getSubTotalByItem(order.getSides()))
+                .subTotal(orderSubTotal)
+                .shippingPrice(getShipping(orderSubTotal))
+                .taxPrice(getTax(orderSubTotal))
+                .totalPrice(getTotal(orderSubTotal))
+                .date(LocalDateTime.now())
+                .build();
 
-            double orderSubTotal = getSubTotal(order);
+        receiptRepository.save(receipt);
+        return receipt;
+    }
 
-            String content = String.format("""
-            ==================================
-            Order Receipt
-            Date: %s
-            ==================================
+    private List<ReceiptSideEntry> generateSidesReceiptEntries(Order order) {
+        return order.getSides().stream()
+                .map(side -> ReceiptSideEntry.builder()
+                        .name(side.getSide().getName())
+                        .price(side.getPrice())
+                        .quantity(side.getQuantity())
+                        .build()
+                ).toList();
+    }
 
-            %s
-            
-            Drinks:
-            %s
+    private List<ReceiptSideEntry> generateDrinksReceiptEntries(Order order) {
+        return order.getDrinks().stream()
+                .map(drink -> ReceiptSideEntry.builder()
+                        .name(drink.getDrink().getName())
+                        .price(drink.getPrice())
+                        .quantity(drink.getQuantity())
+                        .build()
+                ).toList();
+    }
 
-            ==================================
-            Sub Total: $%s
-            Shipping: $%s
-            Taxes: $%s
-            ==================================
-            Order Total: $%s
-            ==================================
-            """, LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), items, drinks, orderSubTotal, getShipping(orderSubTotal), getTax(orderSubTotal), getTotal(orderSubTotal));
+    private List<ReceiptItemEntry> generateReceiptItems(Order order) {
+        return order.getItems().stream()
+                .map(item -> ReceiptItemEntry.builder()
+                        .type(item.getType())
+                        .size(item.getSize())
+                        .price(getSubTotalItem(item))
+                        .toppings(generateToppingsReceipt(item))
+                        .build()
+                ).toList();
+    }
 
-            bufWriter.write(content);
-            bufWriter.close();
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
+    private List<ReceiptSideEntry> generateToppingsReceipt(Item item) {
+        return item.getToppings().stream()
+                .map(topping -> ReceiptSideEntry.builder()
+                        .name(topping.getName())
+                        .price(topping.getPrice())
+                        .quantity(1)
+                        .build()
+                ).toList();
     }
 
     private <T extends PricedItem> double getSubTotalByItem(List<T> items) {
@@ -74,9 +116,13 @@ public class ReceiptService {
                 .sum();
     }
 
+    private double getSubTotalItem(Item item) {
+        return  ITEM_PRICE.get(item.getType()).get(item.getSize()) + getSubTotalByItem(item.getToppings());
+    }
+
     private double getSubTotal(Order order) {
-        List<Topping> toppings = order.getItems().stream().flatMap(item -> item.getToppings().stream()).toList();
-        return getSubTotalByItem(order.getDrinks()) + getSubTotalByItem(toppings);
+        double itemsPrice = order.getItems().stream().reduce(0d, (subtotal, item) -> subtotal + getSubTotalItem(item), Double::sum);
+        return getSubTotalByItem(order.getDrinks()) + itemsPrice + getSubTotalByItem(order.getSides());
     }
 
     private double getShipping(double orderSubTotal) {

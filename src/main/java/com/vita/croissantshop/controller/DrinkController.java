@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:3003")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class DrinkController {
