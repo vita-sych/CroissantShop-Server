@@ -10,7 +10,6 @@ import lombok.Data;
 public class Topping implements PricedItem {
     private Long id;
     private String name;
-    private String image;
     private double price;
     private Type type;
 }
