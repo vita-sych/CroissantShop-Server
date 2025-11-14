@@ -1,0 +1,34 @@
+==================================
+Order Receipt
+Date: 2025-11-14 09:18:51
+==================================
+
+Croissant: MEDIUM | SWEET | $11.0
+Toppings:
+   - Strawberry | $1.50
+   - Mascarpone | $2.00
+   - Whipped Cream | $1.50
+   - Nutella | $2.00
+   - Chocolate | $1.00
+
+Croissant: MEDIUM | SAVORY | $9.5
+Toppings:
+   - Turkey | $2.50
+   - Avocado | $2.00
+   - Dijon Mustard | $0.50
+   - Paprika | $0.50
+Sides:
+   - Onion Rings | $3.5 |Quantity: 1
+   - Mac-n-Cheese | $9.0 |Quantity: 2
+   - Mozzarella Sticks | $4.5 |Quantity: 1
+Drinks:
+   - Fanta | $4.5 |Quantity: 3
+   - Latte | $4.5 |Quantity: 1
+
+==================================
+Sub Total: $46.50
+Shipping: $7.00
+Taxes: $5.58
+==================================
+Order Total: $59.08
+==================================

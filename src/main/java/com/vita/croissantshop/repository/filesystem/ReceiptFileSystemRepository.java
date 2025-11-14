@@ -20,7 +20,6 @@ public class ReceiptFileSystemRepository implements ReceiptRepository {
     @Override
     public void save(Receipt receipt) {
         System.out.println("Saved to file system!");
-        System.out.println(receipt);
         try {
             Path path = Paths.get("src/main/resources/receipts/");
             String fileName = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss").format(receipt.getDate()) + ".txt";

@@ -1,0 +1,38 @@
+==================================
+Order Receipt
+Date: 2025-11-14 09:06:43
+==================================
+
+Croissant: MEDIUM | SWEET | $11.5
+Toppings:
+   - Strawberry | $1.50
+   - Mascarpone | $2.00
+   - Chocolate | $1.00
+   - Whipped Cream | $1.50
+   - Hazelnut Spread | $2.50
+
+Croissant: MEDIUM | SAVORY | $8.0
+Toppings:
+   - Tomato Slices | $1.00
+   - Spinach | $1.00
+   - Paprika | $0.50
+   - Dijon Mustard | $0.50
+   - Arugula | $1.00
+
+Croissant: MEDIUM | SWEET | $4.5
+Toppings:
+   - Whipped Cream | $1.50
+Sides:
+   - Coleslaw | $10.0 |Quantity: 4
+   - Fruit Cup | $12.0 |Quantity: 4
+Drinks:
+   - Fanta | $4.5 |Quantity: 3
+   - Cappuccino | $8.0 |Quantity: 2
+
+==================================
+Sub Total: $58.50
+Shipping: $0.00
+Taxes: $7.02
+==================================
+Order Total: $65.52
+==================================
