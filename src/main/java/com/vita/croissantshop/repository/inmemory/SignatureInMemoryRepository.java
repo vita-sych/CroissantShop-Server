@@ -17,7 +17,7 @@ public class SignatureInMemoryRepository implements SignatureRepository {
     private static final List<Item> SIGNATURES = List.of(
             Item.builder()
                     .id(1L)
-                    .name("Strawberry & Mascarpone")
+                    .name("Strawberry")
                     .size(Size.MEDIUM)
                     .type(Type.SWEET)
                     .image("mascarpone_signature.png")
@@ -59,7 +59,7 @@ public class SignatureInMemoryRepository implements SignatureRepository {
                     .build(),
             Item.builder()
                     .id(3L)
-                    .name("Nutella, Strawberry & Banana")
+                    .name("Strawberry & Banana")
                     .size(Size.MEDIUM)
                     .type(Type.SWEET)
                     .image("nutella_signature.png")

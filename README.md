@@ -217,7 +217,7 @@ Communication between these two parts occurs over HTTP using REST APIs with JSON
 ---
 ### 🎮 DEMO
 
-[Project DEMO](https://youtu.be/liz_5dvFUCs)
+[Project DEMO](https://youtu.be/ClfqksxXEmM)
 
 ---
 ### 👩‍💻 Author

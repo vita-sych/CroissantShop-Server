@@ -1,0 +1,29 @@
+==================================
+Order Receipt
+Date: 2025-11-14 10:37:16
+==================================
+
+Croissant: MEDIUM | SWEET | $7.5
+Toppings:
+   - Banana | $1.00
+   - Strawberry | $1.50
+   - Mascarpone | $2.00
+
+Croissant: MEDIUM | SAVORY | $9.5
+Toppings:
+   - Smoked Salmon | $3.50
+   - Tomato Slices | $1.00
+   - Spinach | $1.00
+Sides:
+   - Coleslaw | $5.0 |Quantity: 2
+   - Mac-n-Cheese | $4.5 |Quantity: 1
+   - Mashed Potatoes | $7.0 |Quantity: 2
+   - French Fries | $3.0 |Quantity: 1
+
+==================================
+Sub Total: $36.50
+Shipping: $7.00
+Taxes: $4.38
+==================================
+Order Total: $47.88
+==================================
